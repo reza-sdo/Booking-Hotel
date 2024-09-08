@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { MdLocationOn } from 'react-icons/md';
 import { HiCalendar, HiMinus, HiPlus, HiSearch } from 'react-icons/hi';
 const Header = () => {
@@ -6,10 +6,16 @@ const Header = () => {
   const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({
     adult: 1,
-    children: 1,
+    children: 0,
     room: 1,
   });
 
+  const optionsChangeHandler = (type, operation) => {
+    setOptions((pre) => ({
+      ...pre,
+      [type]: operation === 'inc' ? +options[type] + 1 : +options[type] - 1,
+    }));
+  };
   return (
     <div className="header">
       <div className="headerSearch">
@@ -36,9 +42,20 @@ const Header = () => {
             id="optionDropDown"
             onClick={() => setOpenOptions((pre) => !pre)}
           >
-            1 adult &bull; children &bull; 1 room
+            {Object.keys(options).map((op, index) => (
+              <Fragment key={index}>
+                {op} : {options[op]}
+                {Object.keys(options).length !== index + 1 && <>&bull;</>}
+              </Fragment>
+            ))}
+            {/* 1 adult &bull; children &bull; 1 room */}
           </div>
-          {openOptions && <GuestOptionList options={options} />}
+          {openOptions && (
+            <GuestOptionList
+              handleOptions={optionsChangeHandler}
+              options={options}
+            />
+          )}
 
           <span className="seperator"></span>
         </div>
@@ -54,24 +71,49 @@ const Header = () => {
 
 export default Header;
 
-function GuestOptionList() {
+function GuestOptionList({ options, handleOptions }) {
   return (
     <div className="guestOptions">
-      <OptionItem />
+      {/* <OptionItem type /> */}
+      {Object.keys(options).map((op, index) => (
+        <OptionItem
+          key={index}
+          handleOptions={handleOptions}
+          type={op}
+          options={options}
+        />
+      ))}
     </div>
   );
 }
 
-function OptionItem() {
+function OptionItem({ type, options, handleOptions }) {
+  const minLimitHandler = () => {
+    switch (type) {
+      case 'adult':
+        return 1;
+      case 'children':
+        return 0;
+      case 'room':
+        return 1;
+    }
+  };
   return (
     <div className="guestOptionItem">
-      <span className="optionText">Adult</span>
+      <span className="optionText">{type}</span>
       <div className="optionCounter">
-        <button className="optionCounterBtn">
+        <button
+          disabled={options[type] === minLimitHandler()}
+          className="optionCounterBtn"
+          onClick={() => handleOptions(type, 'dec')}
+        >
           <HiMinus />
         </button>
-        <span className="optionCounterNumber">2</span>
-        <button className="optionCounterBtn">
+        <span className="optionCounterNumber">{options[type]}</span>
+        <button
+          className="optionCounterBtn"
+          onClick={() => handleOptions(type, 'inc')}
+        >
           <HiPlus />
         </button>
       </div>

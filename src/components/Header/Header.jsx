@@ -1,6 +1,7 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { MdLocationOn } from 'react-icons/md';
 import { HiCalendar, HiMinus, HiPlus, HiSearch } from 'react-icons/hi';
+import useOutsideClick from '../../hooks/useOutSideClick';
 const Header = () => {
   const [destination, setDestination] = useState('');
   const [openOptions, setOpenOptions] = useState(false);
@@ -54,6 +55,7 @@ const Header = () => {
             <GuestOptionList
               handleOptions={optionsChangeHandler}
               options={options}
+              setOpenOptions={setOpenOptions}
             />
           )}
 
@@ -70,10 +72,12 @@ const Header = () => {
 };
 
 export default Header;
-
-function GuestOptionList({ options, handleOptions }) {
+//=================================================================
+function GuestOptionList({ options, handleOptions, setOpenOptions }) {
+  const optionRef = useRef();
+  useOutsideClick(optionRef, 'optionDropDown', () => setOpenOptions(false));
   return (
-    <div className="guestOptions">
+    <div className="guestOptions" ref={optionRef}>
       {/* <OptionItem type /> */}
       {Object.keys(options).map((op, index) => (
         <OptionItem
@@ -86,6 +90,7 @@ function GuestOptionList({ options, handleOptions }) {
     </div>
   );
 }
+//=================================================================
 
 function OptionItem({ type, options, handleOptions }) {
   const minLimitHandler = () => {

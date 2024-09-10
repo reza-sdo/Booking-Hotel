@@ -6,6 +6,11 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRange } from 'react-date-range';
 import { format } from 'date-fns';
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 
 const Header = () => {
   const [destination, setDestination] = useState('');
@@ -15,7 +20,6 @@ const Header = () => {
     children: 0,
     room: 1,
   });
-
   const [date, setDate] = useState([
     {
       startDate: new Date(),
@@ -25,6 +29,13 @@ const Header = () => {
   ]);
   const [openDate, setOpenDate] = useState(false);
 
+  //================== hooks ==================
+
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  //================== handlers ==================
+
   const optionsChangeHandler = (type, operation) => {
     setOptions((pre) => ({
       ...pre,
@@ -32,7 +43,23 @@ const Header = () => {
     }));
   };
 
-  console.log(date);
+  const searchHandler = () => {
+    // if each property is object or array you have to use createSearchParams
+    const encodedParam = createSearchParams({
+      date: JSON.stringify(date),
+      destination,
+      options: JSON.stringify(options),
+    });
+    // console.log(encodedParam);
+    // setSearchParams(encodedParam);
+
+    // and pass it like this
+    // and convert it to string
+    navigate({
+      pathname: '/hotels',
+      search: encodedParam.toString(),
+    });
+  };
 
   return (
     <div className="header">
@@ -56,7 +83,10 @@ const Header = () => {
             onClick={() => setOpenDate((pre) => !pre)}
             className="dateDropDown"
           >
-            {`${format(date[0].startDate, 'MM/dd/yyyy')} to ${format(date[0].endDate, 'MM/dd/yyyy')}`}
+            {`${format(date[0].startDate, 'MM/dd/yyyy')} to ${format(
+              date[0].endDate,
+              'MM/dd/yyyy'
+            )}`}
           </div>
           {openDate && (
             <DateRange
@@ -93,7 +123,7 @@ const Header = () => {
           <span className="seperator"></span>
         </div>
         <div className="headerSearchItem">
-          <button className="headerSearchBtn">
+          <button onClick={searchHandler} className="headerSearchBtn">
             <HiSearch className="headerIcon" />
           </button>
         </div>

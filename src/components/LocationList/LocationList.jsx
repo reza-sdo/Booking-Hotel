@@ -1,10 +1,12 @@
 import React from 'react';
 import useFetch from '../../hooks/useFetch';
+import Loading from '../Loading/Loading';
 
 const LocationList = () => {
   const { data, isLoading } = useFetch('http://localhost:5000/hotels', '');
 
-  if (isLoading) return <p>Loading...</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loading />;
   return (
     <div className="nearbyLocations">
       <h2>Nearby location</h2>

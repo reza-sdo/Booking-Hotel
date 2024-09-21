@@ -2,10 +2,11 @@ import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import { useHotels } from '../context/HotelsProvider';
+import Loading from '../Loading/Loading';
 
 const Hotels = () => {
   const { isLoading, hotels } = useHotels();
-  if (isLoading) return <h1>loading...</h1>;
+  if (isLoading) return <Loading />;
   return (
     <div className="searchList">
       <h2>Search Result ({hotels.length})</h2>

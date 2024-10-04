@@ -13,7 +13,10 @@ import {
 } from 'react-router-dom';
 
 const Header = () => {
-  const [destination, setDestination] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [destination, setDestination] = useState(
+    searchParams.get('destination') || ''
+  );
   const [openOptions, setOpenOptions] = useState(false);
   const [options, setOptions] = useState({
     adult: 1,
@@ -32,7 +35,6 @@ const Header = () => {
   //================== hooks ==================
 
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
 
   //================== handlers ==================
 

@@ -1,22 +1,80 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useUrlLocation from '../../hooks/useUrlLocation';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import ReactCountryFlag from 'react-country-flag';
+
+const BASE_GEOCODING_URL = 'https://api-bdc.net/data/reverse-geocode-client';
 
 const AddNewBookmark = () => {
+  const [cityName, setCityName] = useState('');
+  const [country, setCountry] = useState('');
+  const [countryCode, setCountryCode] = useState('');
+  const [isLoadingGeocoding, setIsLoadingGeocoding] = useState(false);
+  const [geoCodingError, setGeoCodingError] = useState(false);
   const navigate = useNavigate();
   const { lat, lng } = useUrlLocation();
+  console.log(lat, lng);
 
+  useEffect(() => {
+    if (!lat || !lng) {
+      toast.error('طول و عرض جغرافیایی موجود نیست');
+      return;
+    }
+    async function fetchLocationData() {
+      setGeoCodingError(false);
+      setIsLoadingGeocoding(true);
+      try {
+        const { data } = await axios.get(
+          `${BASE_GEOCODING_URL}?latitude=${lat}&longitude=${lng}`
+        );
+
+        if (!data.countryCode)
+          throw new Error('این مکان شهر نیست و کشوری برای این مکان ثبت نشده');
+        setCityName(data.city || data.locality || '');
+        setCountry(data.countryName || data.principalSubdivision || '');
+        setCountryCode(data.countryCode);
+      } catch (error) {
+        console.log(error);
+
+        setGeoCodingError(error.message);
+        toast.error(error.message);
+      } finally {
+        setIsLoadingGeocoding(false);
+      }
+    }
+    fetchLocationData();
+  }, [lat, lng]);
+
+  if (isLoadingGeocoding) return <h1>loading...</h1>;
+  if (geoCodingError) return <p>{geoCodingError}</p>;
   return (
     <div>
       <h2>Bookmark New Location</h2>
       <form className="form">
         <div className="formControl">
           <label htmlFor="cityName">cityName:</label>
-          <input type="text" name="cityName" id="cityName" />
+          <input
+            type="text"
+            name="cityName"
+            id="cityName"
+            value={cityName}
+            onChange={(e) => setCityName(e.target.value)}
+          />
         </div>
         <div className="formControl">
           <label htmlFor="country">Country:</label>
-          <input type="text" name="country" id="country" />
+          <input
+            type="text"
+            name="country"
+            id="country"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+          />
+          <span className="flag">
+            <ReactCountryFlag svg countryCode={countryCode} />
+          </span>
         </div>
         <div className="buttons">
           <button

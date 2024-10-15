@@ -6,7 +6,7 @@ import ReactCountryFlag from 'react-country-flag';
 const SingleBookMark = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { getBookmark, isLoadingCurrentBookmark, currentBookmark } =
+  const { getBookmark, setIsLoading, currentBookmark, isLoading } =
     useBookMark();
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const SingleBookMark = () => {
   const backHandler = () => {
     navigate(-1);
   };
-  if (isLoadingCurrentBookmark || !currentBookmark) return <h1>loading...</h1>;
+  if (isLoading || !currentBookmark) return <h1>loading...</h1>;
   return (
     <div>
       <button onClick={backHandler} className="btn btn--back">

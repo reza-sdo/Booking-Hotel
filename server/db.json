@@ -1332,6 +1332,33 @@
       "longitude": "5.002416587793298",
       "host_location": "Daverdisse Belgium",
       "id": 1
+    },
+    {
+      "cityName": "Daneborg",
+      "country": "Greenland",
+      "countryCode": "GL",
+      "latitude": "78.1773368940915",
+      "longitude": "-44.6484375",
+      "host_location": "Daneborg Greenland",
+      "id": 2
+    },
+    {
+      "cityName": "Ardal",
+      "country": "Norway",
+      "countryCode": "NO",
+      "latitude": "61.278153139277585",
+      "longitude": "7.980050776089814",
+      "host_location": "Ardal Norway",
+      "id": 3
+    },
+    {
+      "cityName": "Abuzeydabad",
+      "country": "Iran (Islamic Republic of)",
+      "countryCode": "IR",
+      "latitude": "34.379712580462204",
+      "longitude": "52.18768572458608",
+      "host_location": "Abuzeydabad Iran (Islamic Republic of)",
+      "id": 4
     }
   ]
 }

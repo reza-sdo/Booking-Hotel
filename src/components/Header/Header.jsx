@@ -8,6 +8,7 @@ import { DateRange } from 'react-date-range';
 import { format } from 'date-fns';
 import {
   createSearchParams,
+  Link,
   useNavigate,
   useSearchParams,
 } from 'react-router-dom';
@@ -66,6 +67,9 @@ const Header = () => {
   return (
     <div className="header">
       <div className="headerSearch">
+        <div className="">
+          <Link to="/bookmark">Bookmarks</Link>
+        </div>
         <div className="headerSearchItem">
           <MdLocationOn className="headerIcon locationIcon" />
           <input
@@ -128,6 +132,9 @@ const Header = () => {
           <button onClick={searchHandler} className="headerSearchBtn">
             <HiSearch className="headerIcon" />
           </button>
+        </div>
+        <div className="">
+          <Link to="/login">login</Link>
         </div>
       </div>
     </div>

@@ -1,6 +1,12 @@
 import { Fragment, useRef, useState } from 'react';
 import { MdLocationOn } from 'react-icons/md';
-import { HiCalendar, HiMinus, HiPlus, HiSearch } from 'react-icons/hi';
+import {
+  HiCalendar,
+  HiLogout,
+  HiMinus,
+  HiPlus,
+  HiSearch,
+} from 'react-icons/hi';
 import useOutsideClick from '../../hooks/useOutSideClick';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -8,9 +14,12 @@ import { DateRange } from 'react-date-range';
 import { format } from 'date-fns';
 import {
   createSearchParams,
+  Link,
+  NavLink,
   useNavigate,
   useSearchParams,
 } from 'react-router-dom';
+import { useAuth } from '../context/AuthProvider';
 
 const Header = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -66,6 +75,9 @@ const Header = () => {
   return (
     <div className="header">
       <div className="headerSearch">
+        <div className="">
+          <NavLink to="/bookmark">Bookmarks</NavLink>
+        </div>
         <div className="headerSearchItem">
           <MdLocationOn className="headerIcon locationIcon" />
           <input
@@ -129,6 +141,9 @@ const Header = () => {
             <HiSearch className="headerIcon" />
           </button>
         </div>
+        <div className="">
+          <User />
+        </div>
       </div>
     </div>
   );
@@ -185,6 +200,31 @@ function OptionItem({ type, options, handleOptions }) {
           <HiPlus />
         </button>
       </div>
+    </div>
+  );
+}
+
+//=================================================================
+
+function User() {
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+  const logoutHandler = () => {
+    logout();
+    navigate('/login' );
+  };
+  return (
+    <div>
+      {isAuthenticated ? (
+        <div>
+          <span>{user.name}</span>
+          <button onClick={logoutHandler}>
+            <HiLogout className="icon" />
+          </button>
+        </div>
+      ) : (
+        <NavLink to="/login">login</NavLink>
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { createContext, useReducer } from 'react';
+import { createContext, useContext, useReducer } from 'react';
 
 const AuthContext = createContext();
 
@@ -41,3 +41,7 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
+
+export function useAuth() {
+  return useContext(AuthContext);
+}

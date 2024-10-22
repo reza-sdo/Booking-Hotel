@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('test@gmail.com');
+  const [password, setPassword] = useState('1234');
+  const navigate = useNavigate();
+  const { user, login, isAuthenticated } = useAuth();
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (email && password) login(email, password);
+  };
+
+  console.log(user);
+  useEffect(() => {
+    if (isAuthenticated) navigate('/', { replace: true });
+  }, [isAuthenticated, navigate]);
+
   return (
     <div className="loginContainer">
       <h2>Login</h2>
-      <form action="" className="form">
+      <form action="" onSubmit={submitHandler} className="form">
         <div className="formControl">
           <label htmlFor="email">Email</label>
           <input
